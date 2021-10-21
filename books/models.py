@@ -1,5 +1,13 @@
 from django.db import models
 
+
+class AutorManager(models.Manager):
+    def create_autor(self, name, surename, fathername, city, birthday):
+
+        autor = self.create(name=name.capitalize(), surename=surename.capitalize(), fathername=fathername.capitalize(), city=city.capitalize(), birthday=birthday)
+        return autor
+
+
 class Autor(models.Model):
 
     name = models.CharField(max_length=250, verbose_name='Имя')
@@ -7,6 +15,8 @@ class Autor(models.Model):
     fathername = models.CharField(max_length=250, blank=True, null=True, verbose_name='Отчество')
     city = models.CharField(max_length=250, verbose_name='Город')
     birthday = models.DateField(verbose_name='День рождения')
+
+    objects = AutorManager()
 
     def __str__(self):
         return str(self.name)
