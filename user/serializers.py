@@ -12,8 +12,10 @@ class UserSerializer(serializers.ModelSerializer):
         user = User(**validated_data)
         password = validated_data.get('password',  None)
         user.set_password(password)
-        user.save()
+
         send_email.delay()
+        user.save()
+
         return user
 
     class Meta:

@@ -1,20 +1,16 @@
-from django.core.mail import BadHeaderError, send_mail
+from django.core.mail import send_mail, EmailMessage
 from django.http import HttpResponse, HttpResponseRedirect
 from books_rest.celery import app
 
 
 @app.task(bind=True)
-def send_email():
-    subject = 'Тема сообщения'
-    message = 'Вам отправленно сообщение'
-    from_email = 'shagvladislavgolubenko@gmail.com'
-    if subject and message and from_email:
-        try:
-            send_mail(subject, message, from_email, ['golubenkovladislav99@gmail.com'])
-        except BadHeaderError:
-            return HttpResponse('Invalid header found.')
-        return HttpResponseRedirect('/contact/thanks/')
-    else:
-        # In reality we'd use a form class
-        # to get proper validation errors.
-        return HttpResponse('Make sure all fields are entered and valid.')
+def send_email(request, *args):
+    print('before we sending messege')
+
+    msg = EmailMessage('Request Callback',
+                       'Here is the message.', to=['golubenkovladislav99@gmail.com'])
+    msg.send()
+
+    # send_mail('Subject here', 'Here is the message.', 'shagvladislavgolubenko@gmail.com',
+    #           ['golubenkovladislav99@gmail.com'], fail_silently=False)
+    print('App wont to send messege')
