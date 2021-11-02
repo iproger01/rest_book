@@ -11,7 +11,12 @@ class UserSerializer(serializers.ModelSerializer):
 
         user = User(**validated_data)
         password = validated_data.get('password',  None)
+
+        if password.length() < 8:
+            raise ValueError("you can't save user with such easy password")
+
         user.set_password(password)
+
 
         send_email.delay()
         user.save()
